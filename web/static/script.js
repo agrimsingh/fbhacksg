@@ -30,7 +30,7 @@ function sendPost(message) {
         }
     }).done(function (data) {
         console.log(data);
-        addToResults([data]);
+        addToResults(data);
     });
 }
 
@@ -75,10 +75,8 @@ var interval = function() {
 }
 //interval();
 
-function addToResults(results) {
-    for (var i=0; i<results.length; i++) {
-        resultsList.push(results[i]);
-    }
+function addToResults(result) {
+    resultsList.push(result);
     update();
 }
 
