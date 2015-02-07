@@ -1,6 +1,7 @@
 var final_transcript = '';
 var transcriptBuffer = '';
 var interim_transcript = '';
+var lastInterim = '';
 var resultsList = [];
 var keywords = {};
 
@@ -39,11 +40,12 @@ function sendPost(message) {
 timeToNext = -1;
 timeoutFrames = 50;
 bounce = false;
-earlyEnded = true;
-earlyEndTranscript = null;
+earlyEndPrefixes = [];
 
 function updateInterim(message) {
+    //console.log(interim_transcript + " << " + message);
     interim_transcript += message;
+    lastInterim = interim_transcript;
     timeToNext = timeoutFrames;
     update();
 }
@@ -57,8 +59,9 @@ function updateFinal(message) {
 function flushMessage() {
     var append;
     append = interim_transcript + '.';
-    if (earlyEnded) {
-        append = insertDot(append);
+    while (earlyEndPrefixes.length > 0) {
+        prefixSentence = earlyEndPrefixes.pop();
+        append = insertDot(prefixSentence, append);
     }
 
     final_transcript += append;
@@ -76,19 +79,20 @@ function submitCurrent() {
 function earlyEnd() {
     //console.log("EARLYEND");
     //console.log(interim_transcript);
-    earlyEnded = true;
-    earlyEndTranscript = interim_transcript;
+    earlyEndPrefixes.push(lastInterim);
+    console.log(earlyEndPrefixes);
     /*if (recording) {
         bounce = true;
         recognition.stop();
     }*/
 }
 
-function insertDot(message) {
+function insertDot(prefixSentence, message) {
+    console.log("INSERTDOT " + prefixSentence + " | " + message);
     var i = 0;
-    len = Math.min(earlyEndTranscript.length, message.length);
+    len = Math.min(prefixSentence.length, message.length);
     while (i < len) {
-        if (earlyEndTranscript.charAt(i) != message.charAt(i)) {
+        if (prefixSentence.charAt(i) != message.charAt(i)) {
             break;
         }
         i++;
@@ -96,7 +100,11 @@ function insertDot(message) {
     while (i > 0 && message.charAt(i-1) == ' ') {
         i--;
     }
-    if (i > 0 && i < len) {
+    while (i < message.length && message.charAt(i) != ' ') {
+        i++;
+    }
+    console.log("i = " + i)
+    if (i > 0 && i < message.length-1 && message.charAt(i) != '.' && message.charAt(i-1) != '.' && message.charAt(i+1) != '.') {
         return message.substr(0,i) + '.' + message.substr(i);
     } else {
         return message;
