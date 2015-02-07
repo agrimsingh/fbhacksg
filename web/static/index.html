@@ -2,13 +2,18 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <title>SUCH BATH</title>
 </head>
 <body>
-    <!--textarea rows="5" cols="50"></textarea><br-->
-    <p><span id="transcript"></span> <span id="temp"></span></p>
+	<div id="controller" ng-app="" ng-controller="speechTextController">
+	{{currentText()}}<br><br>
+	{{currentLine()}}<br>
     <button onclick="startRecording();">Record</button><br>
-    <button onclick="post();">Submit</button>
+    <button onclick="addFullStop();">Add Full Stop</button><br>
+    <br>
+	{{results()}}
+	</div>
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>

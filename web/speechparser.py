@@ -54,7 +54,7 @@ def freqAnalyse(s):
 		print(str(i) + "\n : " + str(freqs[i]) + '\n')
 
 def getString():
-	f = open('sample3.txt')
+	f = open('sample.txt')
 	s = f.read()
 	f.close()
 	return s
@@ -111,9 +111,12 @@ def getKeywords(s):
 	#	printSafe(noun)
 
 
+def hello():
+	print ('hello world')
 
 def getResults(s):
 	results = []
+
 	sentences = getSentences(s)
 	for sentence in sentences:
 		strSentence = sentence._text
@@ -124,10 +127,10 @@ def getResults(s):
 		results.append(sentenceResult)
 	return results
 
-"""
-results = getResults(getString())
 
-for result in results:
-	print(result)
-	print('\n')
-"""
+if __name__ == '__main__':
+	results = getResults(getString())
+
+	for result in results:
+		print(result)
+		print('\n')
