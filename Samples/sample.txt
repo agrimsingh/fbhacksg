@@ -1,0 +1,1 @@
+Red black tree is a binary search tree with one extra bit of storage barn old it's color which can be either red or black by constraining the nude colors off any simple bought from the route to Woodleaf red black trees ensure that no such bath is more than twice as long as any other so that the tree is approximately balanced
