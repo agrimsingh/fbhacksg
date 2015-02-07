@@ -1,10 +1,11 @@
+var final_transcript;
+var recognition = new webkitSpeechRecognition();
+var recording = false;
+recognition.continuous = true;
+recognition.interimResults = true;
+
 function post() {
     var str = $('#transcript').html();
-    //var xh = new XMLHttpRequest();
-    //var fd = new FormData();
-    //fd.append("text", str);
-    //xh.open('POST', '/summary');
-    //xh.send(fd);
     $.ajax({
         url: '/summary',
         type: 'POST',
@@ -16,21 +17,21 @@ function post() {
     });
 }
 
-var recognition = new webkitSpeechRecognition();
-recognition.continuous = true;
-recognition.interimResults = true;
-
 recognition.onstart = function() {
+    recording = true;
+    console.log("RECORDING,..,.,.,.,.");
     $('textarea').val('recording');
 };
-var final_transcript;
+
 recognition.onresult = function(event) {
+    console.log("RESULT!!!!");
     var interim_transcript = '';
 
     for (var i = event.resultIndex; i < event.results.length; i++) {
         if (event.results[i].isFinal) {
             var x = event.results[i][0].transcript;
             console.log(x);
+            console.log(final_transcript);
             final_transcript += x;
         } else {
             interim_transcript += event.results[i][0].transcript;
@@ -39,15 +40,39 @@ recognition.onresult = function(event) {
     $('#transcript').html(final_transcript);
     $('#temp').html(interim_transcript);
 };
-recognition.onerror = function(event) {
 
+recognition.onerror = function(event) {
+    console.log("ERROR-----");
 };
-recognition.onend = function() {
-    alert ("recording ended");
+
+recognition.onend = function(event) {
+    recording = false;
+    console.log("END-----");
 };
+
+function addFullStop() {
+    console.log(final_transcript);
+    final_transcript += '.';
+    $('#transcript').html(final_transcript);
+    $('#temp').html('');
+}
 
 function startRecording() {
+    if (recording) {
+        recognition.stop();
+        return;
+    }
+
     final_transcript = '';
     recognition.lang = 'en-US';
     recognition.start();
+    //angular.element($('#controller')).scope().asdf('aaaa');
+    angular.element($('#controller')).scope().$apply();
+}
+
+
+function speechTextController($scope, $http) {
+    $scope.currentText = function() {
+        return final_transcript;
+    }
 }
