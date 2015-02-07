@@ -1,6 +1,18 @@
 from flask import Flask, request
 import speechparser
+import json
 app = Flask(__name__)
+
+
+def jsonFormat(results):
+	arr = []
+	for result in results:
+		obj = {}
+		obj['sentence'] = result[0]
+		obj['keywords'] = result[1:]
+		arr.append(obj)
+	return json.dumps(arr)
+
 
 
 def testFormat(results):
@@ -24,7 +36,7 @@ def hello_world():
 def summarize():
 	raw_text = request.form['text']
 	results = speechparser.getResults(raw_text)
-	message = testFormat(results)
+	message = jsonFormat(results)
 	print(results)
 	return message
 

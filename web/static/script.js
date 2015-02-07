@@ -1,5 +1,6 @@
-var final_transcript;
-var interim_transcript;
+var final_transcript = '';
+var transcriptBuffer = '';
+var interim_transcript = '';
 var resultsList = [];
 
 var recognition = new webkitSpeechRecognition();
@@ -29,7 +30,7 @@ function sendPost(message) {
         }
     }).done(function (data) {
         console.log(data);
-        addToResults([message]);
+        addToResults(data);
     });
 }
 
@@ -49,11 +50,18 @@ function updateFinal(message) {
 }*/
 
 function flushMessage() {
-    final_transcript += interim_transcript + '.';
-    sendPost(interim_transcript);
+    append = interim_transcript + '.';
+
+    final_transcript += append;
+    transcriptBuffer += append;
     interim_transcript = '';
     timeToNext = -1;
     update();
+}
+
+function submitCurrent() {
+    sendPost(transcriptBuffer);
+    transcriptBuffer = '';
 }
 
 var interval = function() {
@@ -67,10 +75,8 @@ var interval = function() {
 }
 //interval();
 
-function addToResults(results) {
-    for (var i=0; i<results.length; i++) {
-        resultsList.push(results[i]);
-    }
+function addToResults(result) {
+    resultsList.push(result);
     update();
 }
 
@@ -99,6 +105,7 @@ recognition.onerror = function(event) {
 
 recognition.onend = function(event) {
     recording = false;
+    submitCurrent();
     console.log("END-----");
 };
 
@@ -125,7 +132,7 @@ function startRecording() {
 }
 
 function processResults(list) {
-    return list.join('\n');
+    return list.join('<br>');
 }
 
 
