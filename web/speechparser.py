@@ -55,7 +55,7 @@ def freqAnalyse(s):
 		print(str(i) + "\n : " + str(freqs[i]) + '\n')
 
 def getString():
-	f = open('sample3.txt')
+	f = open('sample.txt')
 	s = f.read()
 	f.close()
 	return s
@@ -97,7 +97,8 @@ def getSentences(s):
 	sentences = summarizer(parser.document, SENTENCES_COUNT)
 	return sentences
 
-
+def splitSentence(s):
+	printSafe(nltk.pos_tag(s))
 
 def getKeywords(s):
 	#s = getString()

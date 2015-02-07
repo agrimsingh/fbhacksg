@@ -101,6 +101,10 @@ function insertDot(prefixSentence, message) {
         }
         i++;
     }
+    if (i == 0) {
+        return message;
+    }
+
     while (i > 0 && message.charAt(i-1) == ' ') {
         i--;
     }
@@ -124,7 +128,7 @@ var interval = function() {
     }
     setTimeout(interval, 10);
 }
-interval();
+interval(); // Disable early end by commenting this out.
 
 function addToResults(result) {
     var obj = JSON.parse(result);
@@ -133,7 +137,6 @@ function addToResults(result) {
     });
     //resultsList.push(obj);
     updateKeywords();
-    updateWordCloud()
     update();
 }
 
@@ -189,11 +192,10 @@ recognition.onerror = function(event) {
 
 recognition.onend = function(event) {
     recording = false;
-    submitCurrent();
     console.log("END-----");
-    if (bounce === true) {
+    /*if (bounce === true) {
         recognition.start();
-    }
+    }*/
 };
 
 function addFullStop() {
@@ -204,11 +206,19 @@ function addFullStop() {
 }
 
 function update() {
+    updateWordCloud();
     angular.element($('#controller')).scope().$apply();
 }
 
 
+function reset() {
+    resultsList = []
+    updateKeywords();
+    update();
+}
+
 function startRecording() {
+    submitCurrent();
     if (recording) {
         recognition.stop();
         return;
