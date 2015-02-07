@@ -25,6 +25,7 @@ def summarize():
 	raw_text = request.form['text']
 	results = speechparser.getResults(raw_text)
 	message = testFormat(results)
+	print(results)
 	return message
 
 
