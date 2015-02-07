@@ -2,11 +2,13 @@ var final_transcript = '';
 var transcriptBuffer = '';
 var interim_transcript = '';
 var resultsList = [];
+var keywords = {};
 
 var recognition = new webkitSpeechRecognition();
 var recording = false;
 recognition.continuous = true;
 recognition.interimResults = true;
+
 
 /*function post() {
     var str = $('#transcript').html();
@@ -29,7 +31,6 @@ function sendPost(message) {
             text: message
         }
     }).done(function (data) {
-        console.log(data);
         addToResults(data);
     });
 }
@@ -76,9 +77,31 @@ var interval = function() {
 //interval();
 
 function addToResults(result) {
-    resultsList.push(result);
+    var obj = JSON.parse(result);
+    obj.forEach(function(dict) {
+        resultsList.push(dict);
+    });
+    //resultsList.push(obj);
+    updateKeywords();
     update();
 }
+
+function updateKeywords() {
+    keywords = {};
+    for (var i=0; i<resultsList.length; i++) {
+        result = resultsList[i];
+        for (var j=0; j<result.keywords.length; j++) {
+            keyword = result.keywords[j];
+            if (keywords.hasOwnProperty(keyword)) {
+                keywords[keyword].push(i);
+            } else {
+                keywords[keyword] = [i];
+            }
+        }
+    }
+    return keywords;
+}
+
 
 
 recognition.onstart = function() {
@@ -120,6 +143,7 @@ function update() {
     angular.element($('#controller')).scope().$apply();
 }
 
+
 function startRecording() {
     if (recording) {
         recognition.stop();
@@ -144,6 +168,12 @@ function speechTextController($scope, $http) {
         return interim_transcript;
     }
     $scope.results = function() {
-        return processResults(resultsList);
+        return resultsList;
+    }
+    $scope.keywords = function() {
+        return keywords;
+    }
+    $scope.sentence = function(index) {
+        return resultsList[index].sentence;
     }
 }

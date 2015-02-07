@@ -12,7 +12,15 @@
     <button onclick="startRecording();">Record</button><br>
     <button onclick="addFullStop();">Add Full Stop</button><br>
     <br>
-	<span ng-bind-html-unsafe="q.CATEGORY">{{results()}}</span>
+    <div ng-repeat="result in results()">
+    	{{result.sentence}}. Keywords: {{result.keywords}}
+    </div>
+    <br><br>
+    <div ng-repeat="(key, value) in keywords()">
+    	<i>{{key}}:</i><br>
+    	<span ng-repeat="index in value">Sentence: {{sentence(index)}}<br></span>
+    	<br>
+    </div>
 	</div>
 
 
