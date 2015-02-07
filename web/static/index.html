@@ -3,16 +3,22 @@
 <head lang="en">
     <meta charset="UTF-8">
     <script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-    <title>SUCH BATH</title>
+    <link rel="stylesheet" href="css/pure.css">
+    <title>Summarizr</title>
 </head>
 <body>
 	<div id="controller" ng-app="" ng-controller="speechTextController">
-	{{currentText()}}<br><br>
-	{{currentLine()}}<br>
-    <button onclick="startRecording();">Record</button><br>
-    <button onclick="addFullStop();">Add Full Stop</button><br>
-    <br>
-	{{results()}}
+        <div id="pure-u-1">
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed cursus, urna non venenatis feugiat, erat velit venenatis sapien, quis aliquam nibh est et nunc. Nulla facilisi. Maecenas sed maximus neque. In eget viverra nulla, quis egestas tellus. Sed euismod est tortor, in rhoncus nisi aliquet feugiat. Sed eget sodales nibh. Etiam vestibulum urna vel sapien consequat, varius egestas tortor placerat. Phasellus a rutrum magna. Duis vel sollicitudin augue, et vehicula lorem.</p>
+        </div>
+
+
+    	<!--div id = "pure-u-1"><p>{{currentText()}}</p></div-->
+    	<!--div id = "pure-u-2"><p>{{currentLine()}}</p></div-->
+        <button onclick="startRecording();">Record</button><br>
+        <button onclick="addFullStop();">Add Full Stop</button><br>
+        <br>
+    	<div id = "pure-u-1">{{results()}}</div>
 	</div>
 
 
