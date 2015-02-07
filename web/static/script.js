@@ -37,9 +37,13 @@ function sendPost(message) {
 
 
 timeToNext = -1;
-timeoutFrames = 100;
+timeoutFrames = 50;
+bounce = false;
+earlyEnded = true;
+earlyEndTranscript = null;
+
 function updateInterim(message) {
-    interim_transcript = message;
+    interim_transcript += message;
     timeToNext = timeoutFrames;
     update();
 }
@@ -51,7 +55,11 @@ function updateFinal(message) {
 }*/
 
 function flushMessage() {
+    var append;
     append = interim_transcript + '.';
+    if (earlyEnded) {
+        append = insertDot(append);
+    }
 
     final_transcript += append;
     transcriptBuffer += append;
@@ -65,16 +73,46 @@ function submitCurrent() {
     transcriptBuffer = '';
 }
 
+function earlyEnd() {
+    //console.log("EARLYEND");
+    //console.log(interim_transcript);
+    earlyEnded = true;
+    earlyEndTranscript = interim_transcript;
+    /*if (recording) {
+        bounce = true;
+        recognition.stop();
+    }*/
+}
+
+function insertDot(message) {
+    var i = 0;
+    len = Math.min(earlyEndTranscript.length, message.length);
+    while (i < len) {
+        if (earlyEndTranscript.charAt(i) != message.charAt(i)) {
+            break;
+        }
+        i++;
+    }
+    while (i > 0 && message.charAt(i-1) == ' ') {
+        i--;
+    }
+    if (i > 0 && i < len) {
+        return message.substr(0,i) + '.' + message.substr(i);
+    } else {
+        return message;
+    }
+}
+
 var interval = function() {
     if (timeToNext > 0) {
         timeToNext -= 1;
         if (timeToNext <= 0) {
-            flushMessage();
+            earlyEnd();
         }
     }
     setTimeout(interval, 10);
 }
-//interval();
+interval();
 
 function addToResults(result) {
     var obj = JSON.parse(result);
@@ -130,6 +168,9 @@ recognition.onend = function(event) {
     recording = false;
     submitCurrent();
     console.log("END-----");
+    if (bounce === true) {
+        recognition.start();
+    }
 };
 
 function addFullStop() {
