@@ -3,12 +3,16 @@ var transcriptBuffer = '';
 var interim_transcript = '';
 var resultsList = [];
 var keywords = {};
+var wordCloud = [];
 
 var recognition = new webkitSpeechRecognition();
 var recording = false;
 recognition.continuous = true;
 recognition.interimResults = true;
 
+var myApp = angular.module('myApp', [
+    'angular-jqcloud'
+]);
 
 /*function post() {
     var str = $('#transcript').html();
@@ -83,6 +87,7 @@ function addToResults(result) {
     });
     //resultsList.push(obj);
     updateKeywords();
+    updateWordCloud()
     update();
 }
 
@@ -102,7 +107,17 @@ function updateKeywords() {
     return keywords;
 }
 
-
+function updateWordCloud() {
+    wordCloud = [];
+    for (var keyword in keywords) {
+        if (!keywords.hasOwnProperty(keyword)) continue;
+        wordCloud.push({
+            text: keyword,
+            weight: 1//keywords[keyword].length
+        });
+    }
+    return wordCloud;
+}
 
 recognition.onstart = function() {
     recording = true;
@@ -160,7 +175,7 @@ function processResults(list) {
 }
 
 
-function speechTextController($scope, $http) {
+myApp.controller('speechTextController', function ($scope, $http) {
     $scope.currentText = function() {
         return final_transcript;
     }
@@ -173,7 +188,13 @@ function speechTextController($scope, $http) {
     $scope.keywords = function() {
         return keywords;
     }
+    $scope.wordCloud = function() {
+        return wordCloud;
+    }
     $scope.sentence = function(index) {
         return resultsList[index].sentence;
     }
-}
+
+    $scope.colors = ["#800026", "#bd0026", "#e31a1c", "#fc4e2a", "#fd8d3c", "#feb24c", "#fed976"];
+
+});
