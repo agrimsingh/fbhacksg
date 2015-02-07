@@ -7,6 +7,7 @@ from sumy.summarizers.lsa import LsaSummarizer as Summarizer
 from sumy.nlp.stemmers import Stemmer
 from sumy.utils import get_stop_words
 
+import json
 import nltk
 from textblob import TextBlob
 import re
@@ -84,7 +85,7 @@ def getSentences(s):
 		if c == '.':
 			sumsum += 1
 	SENTENCES_COUNT = max(sumsum/3, 1)
-	print(str(SENTENCES_COUNT) + ' / ' + str(sumsum))
+	#print(str(SENTENCES_COUNT) + ' / ' + str(sumsum))
 
 	parser = PlaintextParser.from_string(s, Tokenizer(LANGUAGE))
     #parser = PlaintextParser.from_file("sample3.txt", Tokenizer(LANGUAGE))
@@ -133,9 +134,20 @@ def getResults(s):
 	return results
 
 
+def jsonFormat(results):
+	arr = []
+	for result in results:
+		obj = {}
+		obj['sentence'] = result[0]
+		obj['keywords'] = result[1:]
+		arr.append(obj)
+	return json.dumps(arr)
+
+
+
 if __name__ == '__main__':
 	results = getResults(getString())
-	#print(jsonFormat(results))
-	for result in results:
-		print(result)
-		print('\n')
+	print(jsonFormat(results))
+	#for result in results:
+	#	print(result)
+	#	print('\n')
