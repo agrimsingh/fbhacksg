@@ -1,6 +1,7 @@
 var final_transcript = '';
 var transcriptBuffer = '';
 var interim_transcript = '';
+var lastInterim = '';
 var resultsList = [];
 var keywords = {};
 var wordCloud = [];
@@ -41,9 +42,14 @@ function sendPost(message) {
 
 
 timeToNext = -1;
-timeoutFrames = 100;
+timeoutFrames = 50;
+bounce = false;
+earlyEndPrefixes = [];
+
 function updateInterim(message) {
-    interim_transcript = message;
+    //console.log(interim_transcript + " << " + message);
+    interim_transcript += message;
+    lastInterim = interim_transcript;
     timeToNext = timeoutFrames;
     update();
 }
@@ -55,7 +61,12 @@ function updateFinal(message) {
 }*/
 
 function flushMessage() {
+    var append;
     append = interim_transcript + '.';
+    while (earlyEndPrefixes.length > 0) {
+        prefixSentence = earlyEndPrefixes.pop();
+        append = insertDot(prefixSentence, append);
+    }
 
     final_transcript += append;
     transcriptBuffer += append;
@@ -69,16 +80,55 @@ function submitCurrent() {
     transcriptBuffer = '';
 }
 
+function earlyEnd() {
+    //console.log("EARLYEND");
+    //console.log(interim_transcript);
+    earlyEndPrefixes.push(lastInterim);
+    console.log(earlyEndPrefixes);
+    /*if (recording) {
+        bounce = true;
+        recognition.stop();
+    }*/
+}
+
+function insertDot(prefixSentence, message) {
+    console.log("INSERTDOT " + prefixSentence + " | " + message);
+    var i = 0;
+    len = Math.min(prefixSentence.length, message.length);
+    while (i < len) {
+        if (prefixSentence.charAt(i) != message.charAt(i)) {
+            break;
+        }
+        i++;
+    }
+    if (i == 0) {
+        return message;
+    }
+
+    while (i > 0 && message.charAt(i-1) == ' ') {
+        i--;
+    }
+    while (i < message.length && message.charAt(i) != ' ') {
+        i++;
+    }
+    console.log("i = " + i)
+    if (i > 0 && i < message.length-1 && message.charAt(i) != '.' && message.charAt(i-1) != '.' && message.charAt(i+1) != '.') {
+        return message.substr(0,i) + '.' + message.substr(i);
+    } else {
+        return message;
+    }
+}
+
 var interval = function() {
     if (timeToNext > 0) {
         timeToNext -= 1;
         if (timeToNext <= 0) {
-            flushMessage();
+            earlyEnd();
         }
     }
     setTimeout(interval, 10);
 }
-//interval();
+interval(); // Disable early end by commenting this out.
 
 function addToResults(result) {
     var obj = JSON.parse(result);
@@ -87,7 +137,6 @@ function addToResults(result) {
     });
     //resultsList.push(obj);
     updateKeywords();
-    updateWordCloud()
     update();
 }
 
@@ -143,8 +192,10 @@ recognition.onerror = function(event) {
 
 recognition.onend = function(event) {
     recording = false;
-    submitCurrent();
     console.log("END-----");
+    /*if (bounce === true) {
+        recognition.start();
+    }*/
 };
 
 function addFullStop() {
@@ -155,11 +206,19 @@ function addFullStop() {
 }
 
 function update() {
+    updateWordCloud();
     angular.element($('#controller')).scope().$apply();
 }
 
 
+function reset() {
+    resultsList = []
+    updateKeywords();
+    update();
+}
+
 function startRecording() {
+    submitCurrent();
     if (recording) {
         recognition.stop();
         return;
