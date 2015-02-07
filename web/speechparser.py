@@ -54,7 +54,7 @@ def freqAnalyse(s):
 		print(str(i) + "\n : " + str(freqs[i]) + '\n')
 
 def getString():
-	f = open('sample.txt')
+	f = open('sample3.txt')
 	s = f.read()
 	f.close()
 	return s
@@ -79,7 +79,12 @@ def niceify(s):
 
 def getSentences(s):
 	LANGUAGE = "english"
-	SENTENCES_COUNT = 10
+	sumsum = 0
+	for c in s:
+		if c == '.':
+			sumsum += 1
+	SENTENCES_COUNT = max(sumsum/3, 1)
+	print(str(SENTENCES_COUNT) + ' / ' + str(sumsum))
 
 	parser = PlaintextParser.from_string(s, Tokenizer(LANGUAGE))
     #parser = PlaintextParser.from_file("sample3.txt", Tokenizer(LANGUAGE))
@@ -130,7 +135,7 @@ def getResults(s):
 
 if __name__ == '__main__':
 	results = getResults(getString())
-
+	#print(jsonFormat(results))
 	for result in results:
 		print(result)
 		print('\n')

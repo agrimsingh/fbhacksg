@@ -12,7 +12,7 @@
     <button onclick="startRecording();">Record</button><br>
     <button onclick="addFullStop();">Add Full Stop</button><br>
     <br>
-	{{results()}}
+	<span ng-bind-html-unsafe="q.CATEGORY">{{results()}}</span>
 	</div>
 
 
