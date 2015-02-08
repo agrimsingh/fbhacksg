@@ -80,6 +80,7 @@ function submitCurrent() {
         sendPost(transcriptBuffer);
     } else {
         sendPost($('textarea').val());
+        $('textarea').val('');
     }
 
     transcriptBuffer = '';
@@ -176,7 +177,7 @@ function updateWordCloud() {
 recognition.onstart = function() {
     recording = true;
     console.log("RECORDING,..,.,.,.,.");
-    $('textarea').val('recording');
+    $('textarea').val('');
 };
 
 recognition.onresult = function(event) {
@@ -223,7 +224,6 @@ function reset() {
 }
 
 function startRecording() {
-    submitCurrent();
     if (recording) {
         recognition.stop();
         return;
