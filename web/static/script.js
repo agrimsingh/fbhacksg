@@ -76,7 +76,12 @@ function flushMessage() {
 }
 
 function submitCurrent() {
-    sendPost(transcriptBuffer);
+    if (transcriptBuffer.length) {
+        sendPost(transcriptBuffer);
+    } else {
+        sendPost($('textarea').val());
+    }
+
     transcriptBuffer = '';
 }
 
