@@ -121,7 +121,7 @@
                 <div ng-repeat="result in results()">
                     {{result.sentence}}<!--. Keywords: {{result.keywords}}-->
                 </div>
-                <jqcloud words="wordCloud()" width="600" height="300" colors="{{colors}}" delay="10" steps="7" font-size="{from:0.09, to:0.04}"></jqcloud>
+                <jqcloud words="wordCloud()" width="1024" height="600" colors="{{colors}}" delay="10" steps="7" font-size="{from:0.09, to:0.04}"></jqcloud>
                 <br><br>
                 <div ng-repeat="(key, value) in keywords()">
                     <i>{{key}}:</i><br>
