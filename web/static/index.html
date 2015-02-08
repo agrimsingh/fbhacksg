@@ -65,6 +65,9 @@
     <div id="controller" ng-controller="speechTextController">
     <div class="content">
         <!--<h3 class="content-head is-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed cursus, urna non venenatis feugiat, erat velit venenatis sapien, quis aliquam nibh est et nunc. Nulla facilisi. Maecenas sed maximus neque. In eget viverra nulla, quis egestas tellus. Sed euismod est tortor, in rhoncus nisi aliquet feugiat. Sed eget sodales nibh. Etiam vestibulum urna vel sapien consequat, varius egestas tortor placerat. Phasellus a rutrum magna. Duis vel sollicitudin augue, et vehicula lorem.</h3>-->
+        <h2 class="content-head is-center">Text-to-summary</h2>
+        <textarea cols="60" rows="5" style="display:block; margin-left: auto; margin-right: auto"></textarea>
+        <h2 class="content-head is-center">Speech-to-summary</h2>
         <h3>{{currentText()}}</h3>
         <h3>{{currentLine()}}</h3>
 
@@ -82,14 +85,9 @@
     <div class="pure-g">
         <div class="pure-u-9-24"></div>
         <div class="pure-u-1-4">
-            <button class="button-record pure-button pure-button-primary" onclick="startRecording();">Record</button>
-        </div>
-        <div class="pure-u-9-24"></div>
-    </div><br>
-    <div class="pure-g">
-        <div class="pure-u-9-24"></div>
-        <div class="pure-u-1-4">
-            <button class="button-record pure-button pure-button-warning" onclick="reset();">RESET</button>
+            <button class="button-record pure-button pure-button-primary" onclick="startRecording();">Record</button><br><br>
+            <button class="button-record pure-button pure-button-warning" onclick="reset();">RESET</button><br><br>
+            <button class="button-record pure-button pure-button-primary" onclick="submitCurrent();">Submit</button>
         </div>
         <div class="pure-u-9-24"></div>
     </div>
