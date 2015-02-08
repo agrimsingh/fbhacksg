@@ -13,7 +13,7 @@ from textblob import TextBlob
 import re
 
 
-ignoreWords = ['such', 'of', 'and', 'the', 'a', 'is', 'for', 'but', 'by', 'thus', 'hence', 'therefore', 'an']
+ignoreWords = ['such', 'of', 'and', 'the', 'a', 'is', 'for', 'but', 'by', 'thus', 'hence', 'therefore', 'an', '\'s']
 
 
 def tokenize(s):
@@ -59,7 +59,7 @@ def freqAnalyse(s):
 		print(str(i) + "\n : " + str(freqs[i]) + '\n')
 
 def getString():
-	f = open('sample3.txt')
+	f = open('sample4.txt')
 	s = f.read()
 	f.close()
 	return s
