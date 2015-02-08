@@ -12,6 +12,10 @@ import nltk
 from textblob import TextBlob
 import re
 
+
+ignoreWords = ['such', 'of', 'and', 'the', 'a', 'is', 'for', 'but', 'by', 'thus', 'hence', 'therefore', 'an']
+
+
 def tokenize(s):
 	tokens = s.split(" ")
 	for i in range(0,len(tokens)):
@@ -55,7 +59,7 @@ def freqAnalyse(s):
 		print(str(i) + "\n : " + str(freqs[i]) + '\n')
 
 def getString():
-	f = open('sample.txt')
+	f = open('sample3.txt')
 	s = f.read()
 	f.close()
 	return s
@@ -109,13 +113,34 @@ def getKeywords(s):
 	#print('\n')
 	nounList = blob.noun_phrases
 	freqs = getFreqs(nounList)
-	return freqs.keys()
+	keys = list(freqs.keys())
+	newKeys = []
+	for i in range(0, len(keys)):
+		res = removeUseless(keys[i])
+		if res != None:
+			newKeys.append(res)
+	return newKeys
 	#for i in range(1, len(freqs)):
 	#	printSafe(str(i) + "\n : " + str(freqs[i]) + '\n')
 
 
 	#for noun in nounList:
 	#	printSafe(noun)
+
+def removeUseless(key):
+	global ignoreWords
+	tokens = key.split(' ')
+	start = 0
+	end = len(tokens)-1
+	while (start <= end and tokens[start] in ignoreWords):
+		start += 1
+	while (start <= end and tokens[end] in ignoreWords):
+		end -= 1
+	if (start <= end):
+		tokens = tokens[start:end+1]
+		return ' '.join(tokens)
+	else:
+		return None
 
 
 def hello():
@@ -143,6 +168,7 @@ def jsonFormat(results):
 		obj['keywords'] = result[1:]
 		arr.append(obj)
 	return json.dumps(arr)
+
 
 
 
